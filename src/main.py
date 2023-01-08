@@ -4,15 +4,22 @@ class Game:
         dealer = Dealer()
         player = Player()
 
+
+
 class Deck:
     def __init__(self):
-        pass
+        self.init_cards()
+        self.shuffle_cards()
 
 class Dealer:
     def __init__(self):
-        pass
+        hand = Hand()
 
 class Player:
+    def __init__(self):
+        hand = Hand()
+
+class Hand:
     def __init__(self):
         pass
 
