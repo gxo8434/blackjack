@@ -1,3 +1,6 @@
+# An implementation of Blackjack
+
+
 class Game:
     def __init__(self):
         deck = Deck()
