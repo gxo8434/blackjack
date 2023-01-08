@@ -11,7 +11,13 @@ class Game:
 class Deck:
     def __init__(self):
         self.init_cards()
-        self.shuffle_cards()
+        self.shuffle()
+
+    def init_cards(self):
+        pass
+
+    def shuffle(self):
+        pass
 
     def draw():
         # Draw card
