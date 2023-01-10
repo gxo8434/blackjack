@@ -59,6 +59,7 @@ class Game:
         else:
             self.gambler.funds -= self.gambler.wager
             print('You Lose!')
+        print('')
     
     # calculates who wins
     def gambler_win(self):
@@ -183,6 +184,7 @@ class Gambler(Player):
             self.action(deck)
         if action_int == 2:
             self.finished = True
+            print('')
             return
         elif action_int == 3:
             self.wager *= 2
@@ -192,6 +194,7 @@ class Gambler(Player):
             self.deal(deck)
             if self.over():
                 self.finished = True
+        print('')
     
     # wager some amount
     def gamble(self):
@@ -201,6 +204,7 @@ class Gambler(Player):
             print('\nEnter non-zero dollar amount.')
             self.gamble()
         self.wager += int(amount)
+        print('')
 
 # Hand is a collection of cards equipped with scoring
 class Hand:
