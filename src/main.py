@@ -44,7 +44,7 @@ class Game:
             win = self.gambler_win()
             self.print_outcome(win)
             self.reset()
-       print('You are out of money. Time to stop!')
+        print('You are out of money. Time to stop!')
 
     # reveals the dealer's hidden card
     def show_cards(self):
