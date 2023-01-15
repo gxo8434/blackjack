@@ -1,12 +1,14 @@
 # An implementation of Blackjack, to run in your terminal
 # Sean Reid
+# Gildas Ouin
 
 import random
 
 # Game implements the flow of the game
 class Game:
     def __init__(self):
-        self.deck = Deck()
+        self.number_of_decks = 6
+        self.deck = Deck(self.number_of_decks)
         self.dealer = Dealer()
         self.gambler = Gambler(100)
         self.reset()
@@ -23,7 +25,8 @@ class Game:
 
     # reset redeals and sets wager to 0
     def reset(self):
-        self.deck = Deck()
+        if (len(self.deck.cards) < (int)(0.25 * (self.number_of_decks))): #Checks if total amount of cards is low enough
+            self.deck = Deck(self.number_of_decks)
         self.dealer.hand = Hand()
         self.gambler.hand = Hand()
         self.gambler.wager = 0
@@ -36,7 +39,7 @@ class Game:
     # plays the game until you run out of money
     def play(self):
         while self.gambler.funds > 0:
-            print(str(self))
+#            print(str(self)) #Removing this since betting should be done without seeing your cards
             self.gambler.gamble()
             self.turn()
             self.show_cards()
@@ -85,17 +88,18 @@ class Deck:
     suits = ['H', 'S', 'C', 'D']
     maxnum = 13
 
-    def __init__(self):
-        self.init_cards()
+    def __init__(self, number_of_decks):
+        self.init_cards(number_of_decks)
         self.shuffle()
 
     # iterate through all suits and numbers (Ace has value 1) and assign them to the deck
-    def init_cards(self):
+    def init_cards(self, number_of_decks):
         self.cards = []
-        for suit in self.suits:
-            for number in range(1, self.maxnum + 1):
-                card = Card(number, suit)
-                self.cards.append(card)
+        for deck_number in range(0, number_of_decks):
+            for suit in self.suits:
+                for number in range(1, self.maxnum + 1):
+                    card = Card(number, suit)
+                    self.cards.append(card)
     
     # randomize deck
     def shuffle(self):
@@ -178,10 +182,12 @@ class Gambler(Player):
     # Choose either hit, stand or double down. TODO: implement split action
     def action(self, deck):
         action = input('\nSpecify an action from the list below.\n1. Hit (take a card)\n2. Stand (take no cards and end turn)\n3. Double Down (double wager, take one more card, and end turn)\n\nChoose a number from 1 to 3: ')
-        action_int = int(action)
-        if action_int not in [1, 2, 3]:
-            print('\nEnter a number from 1 to 3')
+        if action.isnumeric() and int(action) in [1, 2, 3]:
+            action_int = int(action)
+        else:
+            print('\nPlease enter a number from 1 to 3')
             self.action(deck)
+            return 
         if action_int == 2:
             self.finished = True
             print('')
@@ -199,9 +205,14 @@ class Gambler(Player):
     # wager some amount
     def gamble(self):
         amount = input(f'How much to wager? You have {self.funds} left.\nEnter numerical value here ($): ')
-        amount_int = int(amount)
+        if amount.isnumeric():
+            amount_int = int(amount)
+        else:
+            print('\nPlease enter a numerical value.\n')
+            self.gamble()
+            return
         if amount_int == 0:
-            print('\nEnter non-zero dollar amount.')
+            print('\nEnter non-zero dollar amount.\n')
             self.gamble()
         self.wager += int(amount)
         print('')
@@ -241,7 +252,7 @@ class Hand:
     def max_score(self):
         s = 0
         for score in self.scores():
-            if score > 21:
+            if score >= 21:
                 continue
             elif score > s:
                 s = score
